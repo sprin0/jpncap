@@ -1,8 +1,8 @@
 # JpnCap
 
 JpnCap is a simple stand-alone tool for GNU/Linux systems that can
-capture Japanese text on screen though character recognition lets you
-immediately look up this or any text from your clipboard in various
+capture Japanese text on screen though character recognition and lets
+you immediately look up this or any text from your clipboard in various
 dictionaries, mainly JMdict.
 
 ## Dependencies
