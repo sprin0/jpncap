@@ -12,23 +12,34 @@ dictionaries, mainly JMdict.
 
 ## Build
 In the jpncap directory execute
-* `mkdir build && cd build`
-* `cmake .. && make`
+
+```
+mkdir build && cd build
+cmake .. && make
+```
 and as a super user
-* `make install`
+```
+make install
+```
 
 ## Generating standard dictionary files
 In order to look up words, you will need a dictionary file. In the
 jpncap directory execute
-* `cd dict_gen`
-* `curl http://ftp.monash.edu.au/pub/nihongo/JMdict.gz | gzip -d > JMdict.xml`
-* `python3 generate_jm_dict.py -l english JMdict.xml dict.db`
-* `curl http://www.edrdg.org/kanjidic/kanjidic2.xml.gz | gzip -d > kanjidic2.xml`
-* `python3 generate_kanji_dict.py kanjidic2.xml dict.db`
+```
+cd dict_gen
+curl http://ftp.monash.edu.au/pub/nihongo/JMdict.gz | gzip -d > JMdict.xml
+python3 generate_jm_dict.py -l english JMdict.xml dict.db
+curl http://www.edrdg.org/kanjidic/kanjidic2.xml.gz | gzip -d > kanjidic2.xml
+python3 generate_kanji_dict.py kanjidic2.xml dict.db
+```
 This will create a file `dict.db` which needs to be copied to the share
-directory of the installation, by default
-* `cp dict.db /usr/local/share/jpncap/dict.db`
+directory of the installation, by default (as a super user)
+```
+cp dict.db /usr/local/share/jpncap/dict.db
+```
 In the third line you can also add other langauges with additional `-l`
 switches, for exmaple for Japanese-English and Japanese-German
-* `python3 generate_jm_dict.py -l english -l german JMdict.xml dict.db`
+```
+python3 generate_jm_dict.py -l english -l german JMdict.xml dict.db
+```
 
