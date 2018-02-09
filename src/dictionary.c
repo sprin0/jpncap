@@ -204,8 +204,8 @@ typedef struct {
 static Vector *query_database(Dictionary *dict, const char* word,
 	const Language *lang) {
 	sqlite3_stmt *stmt;
-	const char * const QRY_FORMAT = "SELECT id, japanese, pos, %s FROM %s WHERE "
-		"id IN (SELECT ent_id FROM %s_toc WHERE word = ?);";
+	const char * const QRY_FORMAT = "SELECT d.id, d.japanese, d.pos, d.%s FROM "
+		"%s d INNER JOIN %s_toc t ON t.ent_id = d.id WHERE t.word = ?;";
 	char *qry;
 	const char *res;
 	Vector *results;
