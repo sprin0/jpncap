@@ -129,10 +129,8 @@ try:
 			japanese += (", ").join(readings)
 			
 		pos_set = set()
-		translations = {}
 		senses = {}
 		for lang_code in selected_langs_code:
-			translations[lang_code] = ""
 			senses[lang_code] = []
 		for sense in entry.iter("sense"):
 			for pos in sense.iter("pos"):
@@ -176,20 +174,14 @@ try:
 				post_sense += "(See " + (", ").join(xrefs) + ")"
 			for lang, glosses_lang in glosses.items():
 				if len(glosses_lang) > 0:
-					senses[lang].append("{} {} {}".format(pre_sense, ("; ").join(glosses_lang), post_sense))
-				else:
-					senses[lang].append("")
+					n = len(senses[lang]) + 1
+					senses[lang].append("({}) {} {} {}".format(n, pre_sense, ("; ").join(glosses_lang), post_sense))
 		
-		for lang, senses_lang in senses.items():
-			for i, sense in enumerate(senses_lang):
-				if len(sense) > 0:
-					translations[lang] += "({}) {}\n".format(i + 1, sense)
 		pos = ("; ").join(pos_set)
-		
 		column_vals = []
 		values = []
 		for lang in selected_langs_code:
-			column_vals.append(translations[lang])
+			column_vals.append("\n".join(senses[lang]) + "\n")
 			values.append("?")
 		values = ", ".join(values)
 		c.execute("INSERT INTO jmdict ('id', 'japanese', 'pos', {}) VALUES (?, ?, ?, {});".format(entry_columns, values), (ent_seq, japanese, pos) + tuple(column_vals))
