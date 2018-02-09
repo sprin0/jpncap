@@ -209,6 +209,10 @@ static void update_dict_view(GtkTextBuffer* raw_buffer, GParamSpec *pspec,
 	dict_entry = dictionary_lookup(mw->dictionary, text,
 		&(mw->setting_language), mw->deinflect_rules);
 	g_free(text);
+	if (dict_entry == NULL) {
+		fprintf(stderr, "Failed to lookup word.\n");
+		return;
+	}
 	
 	dict_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(mw->dict_text_view));
 	gtk_text_buffer_set_text(dict_buffer, dict_entry, strlen(dict_entry));
