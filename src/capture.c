@@ -70,11 +70,12 @@ static void capture_done(gpointer pdata) {
 	GdkSeat *seat;
 
 	data = (capture_data *) pdata;
-	seat = gdk_display_get_default_seat(gdk_display_get_default());
+	GdkDisplay *display = gdk_display_get_default();
+	seat = gdk_display_get_default_seat(display);
 	gdk_seat_ungrab(seat);
 	gtk_widget_destroy(data->window);
 	g_object_unref(data->cursor);
-	gdk_flush();
+	gdk_display_flush(display);
 
 	if (!data->aborted)
 		g_timeout_add(100, capture_crop_pixbuf, data);
