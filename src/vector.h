@@ -80,7 +80,8 @@ void vector_clear(Vector *vector);
 void *vector_get(Vector *vector, size_t pos);
 
 /** Returns the element at pos of vector. The return value is constant and must
-	not be freed.
+	not be freed. The returned pointer becomes invalid upon calling
+	vector_insert, vector_push or vector_append.
 	If pos is equal or greater than the vector's length, it returns NULL.
 */
 const void *vector_get_const(Vector *vector, size_t pos);

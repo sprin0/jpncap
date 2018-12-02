@@ -228,7 +228,10 @@ Vector *jpn_get_all_variants(const char *text, Vector *rules) {
 					variant.reason = concatenate_reasons(variant_p->reason,
 						rule_p->reason);
 					variant.type = rule_p->type >> 8;
+					
+					/* Append new variant and update variant_p. */
 					vector_append(variants, &variant);
+					variant_p = vector_get_const(variants, pos_v - 1);
 				}
 			}
 			
