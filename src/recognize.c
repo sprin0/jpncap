@@ -441,7 +441,11 @@ void substitutions_destroy(Vector *substitutions) {
 static char *postprocess_text(const char *text, int remove_whitespaces,
 	Vector *substitutions) {
 	int i, j;
-	char *text2 = strdup(text), *output;
+	char *text2, *output;
+	
+	/* Make a copy of text and make space for a line feed at the end. */
+	text2 = malloc(strlen(text) + 2);
+	strcpy(text2, text);
 
 	if (remove_whitespaces) {
 		i = j = 0;
