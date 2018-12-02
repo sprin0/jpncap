@@ -167,7 +167,7 @@ static void capture_button_callback(GtkWidget* widget, gpointer pdata) {
 static void update_dict_view(GtkTextBuffer* raw_buffer, GParamSpec *pspec,
 	gpointer pdata) {
 	main_window *mw = (main_window*)pdata;
-	static char last_lookup[60];
+	static char last_lookup[61];
 	static dictionary_Language last_lang;
 	GtkTextBuffer *dict_buffer;
 	int pos;

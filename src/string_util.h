@@ -110,7 +110,7 @@ static inline char *string_suffix_replace(const char *word, size_t n,
 	size_t word_len = strlen(word);
 	
 	new_word = malloc(word_len - n + strlen(suffix) + 1);
-	strncpy(new_word, word, word_len - n);
+	memcpy(new_word, word, word_len - n);
 	new_word[word_len - n] = 0;
 	strcat(new_word, suffix);
 	
