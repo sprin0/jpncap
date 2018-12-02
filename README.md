@@ -7,7 +7,7 @@ dictionaries, mainly JMdict.
 
 ## Dependencies
 * gtk3
-* tesseract-ocr and tesseract-ocr-jpn data
+* tesseract-ocr, tesseract-ocr-jpn data and tesseract-ocr-jpn_vert data
 * sqlite3
 
 ## Build

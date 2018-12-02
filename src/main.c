@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 	/* Tesseract needs this setlocale call on non English platforms */
 	setlocale(LC_NUMERIC, "C");
 	TesseractHandle = TessBaseAPICreate();
-	if (TessBaseAPIInit3(TesseractHandle, NULL, "jpn") != 0) {
+	if (TessBaseAPIInit3(TesseractHandle, NULL, "jpn+jpn_vert") != 0) {
 		fprintf(stderr, "Could not initiate tesseract. Please check if "
 			"tesseract and its Japanese components are installed "
 			"properly.\n");
