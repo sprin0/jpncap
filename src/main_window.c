@@ -374,6 +374,8 @@ void create_main_window(GtkApplication* app, gpointer pdata) {
 	
 	mw->menu_button = gtk_menu_button_new();
 	gtk_widget_set_halign(mw->menu_button, GTK_ALIGN_END);
+	gtk_button_set_image(GTK_BUTTON(mw->menu_button),
+		gtk_image_new_from_icon_name("open-menu-symbolic", GTK_ICON_SIZE_MENU));
 	gtk_box_pack_start(GTK_BOX(mw->button_box), mw->menu_button, TRUE, TRUE,
 		FALSE);
 	
