@@ -308,7 +308,6 @@ void create_main_window(GtkApplication* app, gpointer pdata) {
 	const dictionary_Language *lang;
 	char *detail_string;
 	
-	GtkWidget *back_image, *forward_image;
 	GtkStyleContext *style_context;
 	GMenu *menu_auto_clipboard, *menu_orientation, *menu_remove_whitespaces,
 		*menu_language, *menu;
@@ -351,10 +350,9 @@ void create_main_window(GtkApplication* app, gpointer pdata) {
 	g_signal_connect(mw->back_button, "clicked", G_CALLBACK(history_back), mw);
 	gtk_widget_set_sensitive(mw->back_button, FALSE);
 	gtk_widget_set_valign(mw->back_button, GTK_ALIGN_CENTER);
-	back_image = gtk_image_new();
-	gtk_button_set_image(GTK_BUTTON(mw->back_button), back_image);
-	gtk_image_set_from_icon_name(GTK_IMAGE(back_image), "go-previous-symbolic",
-		GTK_ICON_SIZE_MENU);
+	gtk_button_set_image(GTK_BUTTON(mw->back_button),
+		gtk_image_new_from_icon_name("go-previous-symbolic",
+			GTK_ICON_SIZE_MENU));
 	gtk_widget_set_tooltip_text(mw->back_button, "Previous text");
 	gtk_box_pack_start(GTK_BOX(mw->history_box), mw->back_button, FALSE, FALSE,
 		FALSE);
@@ -364,10 +362,8 @@ void create_main_window(GtkApplication* app, gpointer pdata) {
 		mw);
 	gtk_widget_set_sensitive(mw->forward_button, FALSE);
 	gtk_widget_set_valign(mw->forward_button, GTK_ALIGN_CENTER);
-	forward_image = gtk_image_new();
-	gtk_button_set_image(GTK_BUTTON(mw->forward_button), forward_image);
-	gtk_image_set_from_icon_name(GTK_IMAGE(forward_image), "go-next-symbolic",
-		GTK_ICON_SIZE_MENU);
+	gtk_button_set_image(GTK_BUTTON(mw->forward_button),
+		gtk_image_new_from_icon_name("go-next-symbolic", GTK_ICON_SIZE_MENU));
 	gtk_widget_set_tooltip_text(mw->forward_button, "Next text");
 	gtk_box_pack_start(GTK_BOX(mw->history_box), mw->forward_button, FALSE,
 		FALSE, FALSE);
