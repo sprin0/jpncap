@@ -164,6 +164,34 @@ static void capture_button_callback(GtkWidget* widget, gpointer pdata) {
 	capture(&capture_callback, pdata);
 }
 
+static char *find_good_lookup_position(char *text, int start_pos) {
+	int pos = start_pos;
+	gunichar c;
+	char *line_start;
+	
+	c = g_utf8_get_char(g_utf8_offset_to_pointer(text, pos));
+	while (c == 0 || g_unichar_isspace(c) || g_unichar_ismark(c)
+			|| g_unichar_ispunct(c)) {
+		if (c == 0 || c == '\n') {
+			/* Go to the start of the line */
+			line_start = g_utf8_strrchr(text,
+				g_utf8_offset_to_pointer(text, pos) - text, '\n');
+			if (line_start == NULL) /* pos is in the first line */
+				pos = 0;
+			else
+				pos = g_utf8_pointer_to_offset(text, line_start) + 1;
+		} else
+			++pos;
+		
+		/* Stop, if reached the start position after going to line start */
+		if (pos == start_pos)
+			break;
+		c = g_utf8_get_char(g_utf8_offset_to_pointer(text, pos));
+	}
+	
+	return g_utf8_offset_to_pointer(text, pos);
+}
+
 static void update_dict_view(GtkTextBuffer* raw_buffer, GParamSpec *pspec,
 	gpointer pdata) {
 	main_window *mw = (main_window*)pdata;
@@ -172,41 +200,28 @@ static void update_dict_view(GtkTextBuffer* raw_buffer, GParamSpec *pspec,
 	GtkTextBuffer *dict_buffer;
 	int pos;
 	GtkTextIter start, end;
-	char *text, *dict_entry, *line_start;
-	size_t text_len;
+	char *text, *text_lookup, *dict_entry;
+	size_t len;
 	
 	g_object_get(raw_buffer, "cursor-position", &pos, NULL);
-	gtk_text_buffer_get_iter_at_offset(raw_buffer, &start, pos);
+	gtk_text_buffer_get_start_iter(raw_buffer, &start);
 	gtk_text_buffer_get_end_iter(raw_buffer, &end);
 	text = gtk_text_buffer_get_text(raw_buffer, &start, &end, TRUE);
-	text_len = strlen(text);
+	/* Skip characters that would yield an empty result. If at end,
+	 * go back to line start */
+	text_lookup = find_good_lookup_position(text, pos);
 	
-	/* if the lookup is going to be empty go to the beginning of the current
-	   line instead */
-	if (*text == 0 || g_unichar_isspace(g_utf8_get_char(text))) {
-		g_free(text);
-		gtk_text_buffer_get_start_iter(raw_buffer, &start);
-		text = gtk_text_buffer_get_text(raw_buffer, &start, &end, TRUE);
-		
-		line_start = g_utf8_strrchr(text,
-			g_utf8_offset_to_pointer(text, pos) - text, '\n');
-		if (line_start != NULL) {
-			line_start = g_utf8_next_char(line_start);
-			memmove(text, line_start, strlen(line_start)+1);
-		}
-		text_len = strlen(text);
-	}
-	
-	if (*text == 0 ||
-		(memcmp(text, last_lookup, 60 > text_len ? text_len : 60) == 0
+	len = strlen(text_lookup);
+	if (*text_lookup == 0 ||
+		(memcmp(text_lookup, last_lookup, 60 > len ? len : 60) == 0
 		&& mw->setting_language.id == last_lang.id)) {
 		g_free(text);
 		return;
 	}
 		
-	strncpy(last_lookup, text, 60);
+	strncpy(last_lookup, text_lookup, 60);
 	last_lang = mw->setting_language;
-	dict_entry = dictionary_lookup(mw->dictionary, text,
+	dict_entry = dictionary_lookup(mw->dictionary, text_lookup,
 		&(mw->setting_language), mw->deinflect_rules);
 	g_free(text);
 	if (dict_entry == NULL) {
