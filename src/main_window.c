@@ -93,8 +93,7 @@ static void auto_clipboard_owner_change(GtkClipboard* clipboard,
 	*/
 	if (!mw->setting_auto_clipboard || event->owner == NULL
 		|| (gdk_x11_window_get_xid(event->owner) & 0xFFFF0000) ==
-		(gdk_x11_window_get_xid(gtk_widget_get_window(GTK_WIDGET(mw->window)))
-			& 0xFFFF0000))
+		   (gdk_x11_window_get_xid(event->window) & 0xFFFF0000))
 		return;
 	if ((text = gtk_clipboard_wait_for_text(clipboard)) == NULL)
 		return;
@@ -502,7 +501,7 @@ void startup_main_window(GApplication* app, gpointer pdata) {
 	g_action_map_add_action_entries(G_ACTION_MAP(app), entries,
 		G_N_ELEMENTS(entries), mw);
 	mw->clipboard = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-	g_signal_connect(mw->clipboard, "owner-change",
+	mw->clipboard_hanlder_id = g_signal_connect(mw->clipboard, "owner-change",
 		G_CALLBACK(auto_clipboard_owner_change), mw);
 	if (mw->dictionary)
 		free(state);
@@ -516,6 +515,8 @@ void shutdown_main_window(GApplication *app, gpointer pdata) {
 		if (mw->history_entries[i] != NULL)
 			free(mw->history_entries[i]);
 	}
+	/* Disconnect the owner-change event */
+	g_signal_handler_disconnect(mw->clipboard, mw->clipboard_hanlder_id);
 }
 
 static void mw_update(main_window* mw) {

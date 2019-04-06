@@ -46,6 +46,7 @@ typedef struct {
 	char *history_entries[MAIN_WINDOW_HISTORY_ENTRIES_MAX];
 	int cur_history_entry;
 	GtkClipboard *clipboard;
+	gulong clipboard_hanlder_id;
 	gboolean setting_auto_clipboard;
 	text_ori setting_orientation;
 	gboolean setting_remove_whitespaces;
