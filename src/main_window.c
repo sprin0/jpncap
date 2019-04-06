@@ -66,6 +66,8 @@ static int string_contains_japanese(const char *utf8_str) {
 	gunichar *ucs4_str, *p_ucs4_str;
 	
 	ucs4_str = g_utf8_to_ucs4_fast(utf8_str, -1, NULL);
+	if (ucs4_str == NULL) /* utf8_str is not a valid UTF-8 string */
+		return 0;
 	for (p_ucs4_str = ucs4_str; *p_ucs4_str; ++p_ucs4_str) {
 		if ((*p_ucs4_str <= 0x309F && *p_ucs4_str >= 0x3040) /*is hiragana*/
 			|| (*p_ucs4_str <= 0x30FF && *p_ucs4_str >= 0x30A0) /*is katakana*/
@@ -75,6 +77,7 @@ static int string_contains_japanese(const char *utf8_str) {
 			return 1;
 		}
 	}
+	g_free(ucs4_str);
 	return 0;
 }
 
@@ -207,7 +210,7 @@ static void update_dict_view(GtkTextBuffer* raw_buffer, GParamSpec *pspec,
 	gtk_text_buffer_get_start_iter(raw_buffer, &start);
 	gtk_text_buffer_get_end_iter(raw_buffer, &end);
 	text = gtk_text_buffer_get_text(raw_buffer, &start, &end, TRUE);
-	/* Skip characters that would yield an empty result. If at end,
+	/* Skip characters that would yield an empty result. If pos is at line end,
 	 * go back to line start */
 	text_lookup = find_good_lookup_position(text, pos);
 	
